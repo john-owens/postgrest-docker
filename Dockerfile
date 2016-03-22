@@ -1,3 +1,4 @@
+#NOT WORKING ATM
 FROM alpine:3.2
 MAINTAINER john.owens
 
@@ -5,18 +6,17 @@ USER root
 
 RUN \
   echo ipv6 >> /etc/modules && \
+  echo postgresql-dev >> /etc/modules && \
   apk update && \
   apk upgrade && \
   apk add --update ca-certificates curl
-
+#  RUN yum install -y tar wget postgresql-devel
 WORKDIR /tmp
 
 #  sed -i -e 's#:/bin/[^:].*$#:/sbin/nologin#' /etc/passwd && \
 RUN \
   mkdir postgrest
 
-ENV PREST_HOME /usr/local/postgrest
-#ENV PATH "$PATH:$PREST_HOME"
 WORKDIR /tmp/postgrest
 
   #tar xf postgrest-${version}-${platform}.tar.xz && \
@@ -29,11 +29,14 @@ RUN \
   tar xf postgrest-${version}-${platform}.tar && \
   ls -al && \
   rm *.tar && \
-  mkdir -p ${PREST_HOME} && \
-  mv * ${PREST_HOME} && \
-  chmod +x ${PREST_HOME}/postgrest && \
-  ls ${PREST_HOME}/ -al
+  mv postgrest /usr/local/bin/postgrest
 
-RUN echo $PATH
+  #chmod +x /usr/local/postgrest
 
+CMD postgrest  --db-host localhost  --db-port 5432     \
+               --db-name my_db      --db-user postgres \
+               --db-pass foobar     --db-pool 200      \
+               --anonymous postgres --port 3000        \
+               --v1schema public
 WORKDIR /root
+EXPOSE 3000
