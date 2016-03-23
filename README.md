@@ -4,4 +4,4 @@ Run the centos image atm, not gotten alpine to work yet.
 
 =Example run command=
 
->docker run -P --name <instance name> -d <image name> postgres://jentrata:jentrata@<machine ip>:5100/<db>  --port 3000 --pool 10 --schema public --anonymous <anon user>
+>docker run -P --name <instance name> -d <image name> postgres://username:password@<machine ip>:5100/<db>  --port 3000 --pool 10 --schema public --anonymous <anon user>
